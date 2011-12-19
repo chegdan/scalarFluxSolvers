@@ -1,5 +1,7 @@
 #!/bin/bash
 
 cd solvers/passiveGDHFoam
-wmake
+	wmake
+cd ../passiveLaunderSFFoam
+	wmake
 cd ..

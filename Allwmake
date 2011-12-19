@@ -2,6 +2,8 @@
 
 cd solvers/passiveGDHFoam
 	wmake
-cd ../passiveLaunderSFFoam
+cd ../passiveLaunderSFTFoam
+	wmake
+cd ../passiveFoxASMFoam
 	wmake
 cd ..

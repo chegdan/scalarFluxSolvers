@@ -2,6 +2,8 @@
 
 cd solvers/passiveGDHFoam
 	wclean
-cd ../passiveLaunderSFFoam
+cd ../passiveLaunderSFTFoam
+	wclean
+cd ../passiveFoxASMFoam
 	wclean
 cd ..

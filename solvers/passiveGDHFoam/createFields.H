@@ -13,9 +13,9 @@
     );
 
     Info<<"Reading tubulentSchmidt number\n"<<endl;
-    dimensionedScalar turbulentSchmidt
+    dimensionedScalar Sct
     (
-        transportProperties.lookup("turbulentSchmidt")
+        transportProperties.lookup("Sct")
     );
 
     Info<<"Reading molecular mass diffusivity \n"<<endl;
@@ -41,18 +41,18 @@
 
     Info<< "Reading field Dturbulent\n" << endl;
 //turbulent mass diffusivity
-    volScalarField Dturbulent
+    volScalarField Dt
     (
         IOobject
         (
-            "Dturbulent",
+            "Dt",
             runTime.timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         ),
         mesh,
-	dimensionedScalar("Dturbulent", dimensionSet(0,2,-1,0,0,0,0), 0.0), 
+	dimensionedScalar("Dt", dimensionSet(0,2,-1,0,0,0,0), 0.0), 
 	"zeroGradient"
     );
 

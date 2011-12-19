@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -r 0.* 1 1.* patch* log.* processor*
+
+
+

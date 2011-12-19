@@ -50,7 +50,12 @@ int main(int argc, char *argv[])
 #   include "showCoNum.H"//output the Courant number after timestep change
 
 #   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
-#   include "ScNo.H"//sets initial values of Dturbulent if needed
+
+//treat relationship to R as a turbulent diffusivity
+
+//tensor IdentityMatrix(1, 0, 0, 0, 1, 0, 0, 0, 1);
+    volSymmTensorField Dt = ((k/(Sct*epsilon)))*R;
+    //volVectorField gradC = fvc::grad(C);
 
     Dt.write();//must write the Dturbulent field if changed by ScNo.H
     phi.write();//write the phi field in initial directory
@@ -74,15 +79,9 @@ int main(int argc, char *argv[])
               + fvm::div(phi, C)
 	      + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
 	      - fvm::laplacian(D, C)
-              - fvm::laplacian(Dt, C)
+              - fvc::laplacian(Dt, C)
+	      //- fvm::div(Dt, gradC)
             );
-/*            solve
-            (
-                fvc::ddt(C)
-              + fvc::div(phi, C)
-	      - fvc::laplacian(D, C)
-              - fvc::laplacian(Dturbulent, C)
-            );*/
 
         }
 

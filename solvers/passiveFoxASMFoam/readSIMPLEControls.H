@@ -6,8 +6,4 @@
         nNonOrthCorr = readInt(simple.lookup("nNonOrthogonalCorrectors"));
     }
 
-    int tSchmidt = 0;
-    if (simple.found("tSchmidt"))
-    {
-	tSchmidt = readInt(simple.lookup("tSchmidt"));
-    }
+

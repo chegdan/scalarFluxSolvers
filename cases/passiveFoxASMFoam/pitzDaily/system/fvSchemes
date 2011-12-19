@@ -42,8 +42,9 @@ laplacianSchemes
     default         none;
   //  laplacian(D,C) Gauss linear limited 1.0;
 //    laplacian(Dturbulent,C) Gauss linear limited 1.0;
-    laplacian(D,C) Gauss linear uncorrected;
-    laplacian(Dt,C) Gauss linear uncorrected;
+    laplacian(D,C) Gauss linear limited 1.0;
+    laplacian(Dt,C) Gauss linear limited 1.0;
+laplacian(((k|(Sct*epsilon))*R),C) Gauss linear limited 1.0;
 }
 
 interpolationSchemes

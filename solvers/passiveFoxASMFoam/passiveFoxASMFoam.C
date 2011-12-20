@@ -42,22 +42,34 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 #   include "createFields.H"
-#   include "readTimeControls.H"//added
+/*#   include "readTimeControls.H"//added
 #   include "CourantNo.H"//added
 
 //Info<<"Setting initial delta time"<<endl;
 #   include "setInitialDeltaT.H"//added--only need to set timestep once
 #   include "showCoNum.H"//output the Courant number after timestep change
-
+*/
 #   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
 
 //treat relationship to R as a turbulent diffusivity
 
-//tensor IdentityMatrix(1, 0, 0, 0, 1, 0, 0, 0, 1);
     volSymmTensorField Dt = ((k/(Sct*epsilon)))*R;
+
+//correct negative values in Dt to positive
+forAll(Dt, cellI){
+
+	Dt[cellI].xx() = ( Dt[cellI].xx() < 0 ) ? -Dt[cellI].xx() : Dt[cellI].xx() ;
+	Dt[cellI].xy() = ( Dt[cellI].xy() < 0 ) ? -Dt[cellI].xy() : Dt[cellI].xy() ;
+	Dt[cellI].xz() = ( Dt[cellI].xz() < 0 ) ? -Dt[cellI].xz() : Dt[cellI].xz() ;
+	Dt[cellI].yy() = ( Dt[cellI].yy() < 0 ) ? -Dt[cellI].yy() : Dt[cellI].yy() ;
+	Dt[cellI].yz() = ( Dt[cellI].yz() < 0 ) ? -Dt[cellI].yz() : Dt[cellI].yz() ;
+	Dt[cellI].zz() = ( Dt[cellI].zz() < 0 ) ? -Dt[cellI].zz() : Dt[cellI].zz() ;
+
+}
+
     //volVectorField gradC = fvc::grad(C);
 
-    Dt.write();//must write the Dturbulent field if changed by ScNo.H
+    //Dt.write();//must write the Dturbulent field if changed by ScNo.H
     phi.write();//write the phi field in initial directory
 
 
@@ -73,16 +85,34 @@ int main(int argc, char *argv[])
 
         for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
         {
-            solve
+
+	fvScalarMatrix CEqn
+	(
+           fvm::div(phi, C)
+	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
+	 - fvm::laplacian(D, C)
+         - fvm::laplacian(Dt, C)
+	);
+
+	CEqn.relax();
+	
+	solve(CEqn);
+
+
+
+
+
+
+/*            solve
             (
                 fvm::ddt(C)
               + fvm::div(phi, C)
 	      + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
 	      - fvm::laplacian(D, C)
-              - fvc::laplacian(Dt, C)
-	      //- fvm::div(Dt, gradC)
-            );
+              - fvm::laplacian(Dt, C)
 
+            );
+*/
         }
 
         runTime.write();

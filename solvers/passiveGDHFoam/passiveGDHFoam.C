@@ -42,15 +42,10 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 #   include "createFields.H"
-#   include "readTimeControls.H"//added
-#   include "CourantNo.H"//added
-
-//Info<<"Setting initial delta time"<<endl;
-#   include "setInitialDeltaT.H"//added--only need to set timestep once
-#   include "showCoNum.H"//output the Courant number after timestep change
 
 #   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
-#   include "ScNo.H"//sets initial values of Dturbulent if needed
+
+    Dt = nut/Sct;
 
     Dt.write();//must write the Dturbulent field if changed by ScNo.H
     phi.write();//write the phi field in initial directory
@@ -68,21 +63,18 @@ int main(int argc, char *argv[])
 
         for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
         {
-            solve
-            (
-                fvm::ddt(C)
-              + fvm::div(phi, C)
-	      + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
-	      - fvm::laplacian(D, C)
-              - fvm::laplacian(Dt, C)
-            );
-/*            solve
-            (
-                fvc::ddt(C)
-              + fvc::div(phi, C)
-	      - fvc::laplacian(D, C)
-              - fvc::laplacian(Dturbulent, C)
-            );*/
+
+	fvScalarMatrix CEqn
+	(
+           fvm::div(phi, C)
+	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
+	 - fvm::laplacian(D, C)
+         - fvm::laplacian(Dt, C)
+	);
+
+	CEqn.relax();
+	
+	solve(CEqn);
 
         }
 

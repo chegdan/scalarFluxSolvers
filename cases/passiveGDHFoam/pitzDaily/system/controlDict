@@ -22,15 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         0.5;
+endTime         500;
 
-deltaT          0.0001;
+deltaT          1;
 
-//writeControl    timeStep;
-writeControl    adjustableRunTime;
+writeControl    timeStep;
 
-//writeInterval   100;
-writeInterval   0.01;
+writeInterval   50;
 
 purgeWrite      0;
 
@@ -46,37 +44,6 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-maxCo 		0.5;
-//maxFd		0.5;
-
-maxDeltaT 	0.01; // Maximum deltaT in seconds
-
-adjustTimeStep yes;
 
 
 // ************************************************************************* //
-
-functions
-(
-	outletPatchMassFlowAverage
-	{
-		type patchMassFlowAverage;
-		functionObjectLibs ("libsimpleFunctionObjects.so" );
-		verbose true;
-		outputControl timeStep;
-		outputInterval 1;
-		patches ( outlet );
-		fields ( C );
-	}
-
-	outletPatchAverage
-	{
-		type patchAverage;
-		functionObjectLibs ("libsimpleFunctionObjects.so" );
-		verbose true;
-		outputControl timeStep;
-		outputInterval 1;
-		patches ( outlet );
-		fields ( C );
-	}
-);

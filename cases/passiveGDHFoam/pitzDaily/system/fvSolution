@@ -34,7 +34,12 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    tSchmidt 1;
+    //tSchmidt 1;
+}
+
+relaxationFactors
+{
+   C		0.9;
 }
 
 // ************************************************************************* //

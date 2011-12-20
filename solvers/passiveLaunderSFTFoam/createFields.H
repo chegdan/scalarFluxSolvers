@@ -85,4 +85,20 @@
         mesh
     );
 
+    Info<< "Reading field S\n" << endl;
+
+    volVectorField S
+    (
+        IOobject
+        (
+            "S",
+            runTime.timeName(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh
+    );
+
+
 #   include "createPhi.H"

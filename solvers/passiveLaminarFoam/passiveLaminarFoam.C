@@ -22,36 +22,68 @@ License
     along with OpenFOAM; if not, write to the Free Software Foundation,
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-Global
-    createPhi
+Application
+    scalarTransportFoam
 
 Description
-    Creates and initialises the relative face-flux field phi.
+    Solves a transport equation for a passive scalar
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef createPhi_H
-#define createPhi_H
+#include "fvCFD.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Info<< "Reading/calculating face flux field phi\n" << endl;
+int main(int argc, char *argv[])
+{
 
-surfaceScalarField phi
-(
-    IOobject
-    (
-        "phi",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::NO_WRITE
-    ),
-    mesh//linearInterpolate(U) & mesh.Sf()
-);
+#   include "setRootCase.H"
+  
+#   include "createTime.H"
+#   include "createMesh.H"
+#   include "createFields.H"
+
+#   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#endif
+    Info<< "\nCalculating scalar transport\n" << endl;
+
+    for (runTime++; !runTime.end(); runTime++)
+    {
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+#       include "readSIMPLEControls.H"
+
+        for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
+        {
+
+	fvScalarMatrix CEqn
+	(
+	   fvm::div(phi, C)
+	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
+	 - fvm::laplacian(D, C)
+
+	);
+
+	
+	solve(CEqn);
+
+        }
+
+        runTime.write();
+        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << nl << endl;
+
+
+    }
+
+    Info<< "End\n" << endl;
+
+    return(0);
+}
+
 
 // ************************************************************************* //

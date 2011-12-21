@@ -6,4 +6,5 @@ cd ../passiveLaunderSFTFoam
 	wclean
 cd ../passiveFoxASMFoam
 	wclean
-cd ..
+cd ../passiveLaminarFoam
+	wclean

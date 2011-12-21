@@ -6,4 +6,5 @@ cd ../passiveLaunderSFTFoam
 	wmake
 cd ../passiveFoxASMFoam
 	wmake
-cd ..
+cd ../passiveLaminarFoam
+	wmake

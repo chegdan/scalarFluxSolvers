@@ -47,7 +47,7 @@ surfaceScalarField phi
         IOobject::READ_IF_PRESENT,
         IOobject::NO_WRITE
     ),
-    mesh//linearInterpolate(U) & mesh.Sf()
+    mesh
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -85,7 +85,7 @@
         mesh
     );
 
-    Info<< "Reading field S\n" << endl;
+    Info<< "Reading field scalar flux field S\n" << endl;
 
     volVectorField S
     (

@@ -82,6 +82,7 @@ forAll(Dt, cellI){
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
 #       include "readSIMPLEControls.H"
+#       include "initConvergenceCheck.H"
 
         for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
         {
@@ -96,29 +97,18 @@ forAll(Dt, cellI){
 
 	CEqn.relax();
 	
-	solve(CEqn);
+	eqnResidual = solve(CEqn).initialResidual();
+        maxResidual = max(eqnResidual, maxResidual);
 
-
-
-
-
-
-/*            solve
-            (
-                fvm::ddt(C)
-              + fvm::div(phi, C)
-	      + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
-	      - fvm::laplacian(D, C)
-              - fvm::laplacian(Dt, C)
-
-            );
-*/
         }
 
         runTime.write();
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
+
+#       include "convergenceCheck.H"
+
     }
 
     Info<< "End\n" << endl;

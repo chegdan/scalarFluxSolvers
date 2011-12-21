@@ -60,6 +60,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
 #       include "readSIMPLEControls.H"
+#       include "initConvergenceCheck.H"
 
         for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
         {
@@ -74,7 +75,8 @@ int main(int argc, char *argv[])
 
 	CEqn.relax();
 	
-	solve(CEqn);
+	eqnResidual = solve(CEqn).initialResidual();
+        maxResidual = max(eqnResidual, maxResidual);
 
         }
 
@@ -82,6 +84,9 @@ int main(int argc, char *argv[])
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
+
+#       include "convergenceCheck.H"
+
     }
 
     Info<< "End\n" << endl;

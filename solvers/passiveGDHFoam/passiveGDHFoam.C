@@ -67,10 +67,12 @@ int main(int argc, char *argv[])
 
 	fvScalarMatrix CEqn
 	(
-           fvm::div(phi, C)
+	   fvm::ddt(C)
+         + fvm::div(phi, C)
 	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
 	 - fvm::laplacian(D, C)
          - fvm::laplacian(Dt, C)
+
 	);
 
 	CEqn.relax();

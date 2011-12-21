@@ -44,6 +44,7 @@ laplacianSchemes
 //    laplacian(Dturbulent,C) Gauss linear limited 1.0;
     laplacian(D,C) Gauss linear limited 1.0;
     laplacian(Dt,C) Gauss linear limited 1.0;
+    laplacian((D+Dt),C) Gauss linear limited 1.0;
 }
 
 interpolationSchemes

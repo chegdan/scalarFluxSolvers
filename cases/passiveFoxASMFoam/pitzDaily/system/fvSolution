@@ -34,6 +34,7 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
+    convergence 1e-2;
 }
 
 relaxationFactors

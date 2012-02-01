@@ -8,3 +8,5 @@ cd ../passiveFoxASMFoam
 	wclean
 cd ../passiveLaminarFoam
 	wclean
+cd ../passiveTransLaminarFoam
+	wclean

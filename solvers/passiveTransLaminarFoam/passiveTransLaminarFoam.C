@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 #   include "createFields.H"
+#   include "readTimeControls.H"//added
+#   include "CourantNo.H"//added
+#   include "setInitialDeltaT.H"//added--only need to set timestep once
+#   include "showCoNum.H"//output the Courant number after timestep change
 
 #   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
 

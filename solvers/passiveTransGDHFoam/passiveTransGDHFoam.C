@@ -26,7 +26,7 @@ Application
     scalarTransportFoam
 
 Description
-    Solves a transient transport equation for a passive scalar in a laminar flow
+    Solves a transient transport equation for a passive scalar in a turbulent flow
 
 \*---------------------------------------------------------------------------*/
 
@@ -49,6 +49,11 @@ int main(int argc, char *argv[])
 
 #   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
 
+    Dt = nut/Sct;
+
+    Dt.write();//must write the Dturbulent field if changed by ScNo.H
+    phi.write();//write the phi field in initial directory
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,21 +64,25 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
 #       include "readSIMPLEControls.H"
+//#       include "initConvergenceCheck.H"
 
         for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
         {
 
 	fvScalarMatrix CEqn
 	(
-	   fvm::ddt( C)
+	   fvm::ddt(C)
 	 + fvm::div(phi, C)
 	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
 	 - fvm::laplacian(D, C)
+         - fvm::laplacian(Dt, C)
 
 	);
 
+	//CEqn.relax();
 	
 	solve(CEqn);
+  //      maxResidual = max(eqnResidual, maxResidual);
 
         }
 
@@ -82,6 +91,7 @@ int main(int argc, char *argv[])
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
 
+//#       include "convergenceCheck.H"
 
     }
 

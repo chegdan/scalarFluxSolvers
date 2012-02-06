@@ -22,73 +22,36 @@ License
     along with OpenFOAM; if not, write to the Free Software Foundation,
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-Application
-    scalarTransportFoam
+Global
+    createPhi
 
 Description
-    Solves a transient transport equation for a passive scalar in a laminar flow
+    Creates and initialises the relative face-flux field phi.
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#ifndef createPhi_H
+#define createPhi_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-int main(int argc, char *argv[])
-{
+Info<< "Reading/calculating face flux field phi\n" << endl;
 
-#   include "setRootCase.H"
-  
-#   include "createTime.H"
-#   include "createMesh.H"
-#   include "createFields.H"
-#   include "readTimeControls.H"//added
-#   include "CourantNo.H"//added
-#   include "setInitialDeltaT.H"//added--only need to set timestep once
-#   include "showCoNum.H"//output the Courant number after timestep change
-
-#   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
-
+surfaceScalarField phi
+(
+    IOobject
+    (
+        "phi",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::NO_WRITE
+    ),
+    mesh//linearInterpolate(U) & mesh.Sf()
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nCalculating scalar transport\n" << endl;
-
-    for (runTime++; !runTime.end(); runTime++)
-    {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
-#       include "readSIMPLEControls.H"
-
-        for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
-        {
-
-	fvScalarMatrix CEqn
-	(
-	   fvm::ddt( C)
-	 + fvm::div(phi, C)
-	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
-	 - fvm::laplacian(D, C)
-
-	);
-
-	
-	solve(CEqn);
-
-        }
-
-        runTime.write();
-        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
-            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
-            << nl << endl;
-
-
-    }
-
-    Info<< "End\n" << endl;
-
-    return(0);
-}
-
+#endif
 
 // ************************************************************************* //

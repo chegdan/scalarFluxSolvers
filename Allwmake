@@ -8,5 +8,7 @@ cd ../passiveFoxASMFoam
 	wmake
 cd ../passiveLaminarFoam
 	wmake
+cd ../passiveTransGDHFoam
+	wmake
 cd ../passiveTransLaminarFoam
 	wmake

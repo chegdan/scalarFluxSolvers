@@ -9,47 +9,42 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      controlDict;
+    class       volScalarField;
+    object      C;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application scalarTransportFoam;
+dimensions      [0 -3 0 0 1 0 0];
 
-startFrom       startTime;
+internalField   uniform 0;
 
-startTime       0;
+boundaryField
+{
+    inlet           
+    {
+        type            fixedValue;
+        value           uniform 3.88457e-4;
+    }
 
-stopAt          endTime;
+    outlet          
+    {
+        type            zeroGradient;
+    }
 
-endTime         1;
+    upperWall       
+    {
+        type            zeroGradient;
+    }
 
-deltaT          0.01;
+    lowerWall       
+    {
+        type            zeroGradient;
+    }
 
-writeControl    adjustableRunTime;
-
-writeInterval   0.01;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression uncompressed;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-
-maxDeltaT       1;
-
-
+    frontAndBack    
+    {
+        type            empty;
+    }
+}
 
 // ************************************************************************* //

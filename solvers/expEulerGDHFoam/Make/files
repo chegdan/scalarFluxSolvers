@@ -1,0 +1,3 @@
+expEulerGDHFoam.C
+
+EXE = $(FOAM_USER_APPBIN)/expEulerGDHFoam

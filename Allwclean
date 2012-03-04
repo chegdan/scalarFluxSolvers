@@ -12,3 +12,11 @@ cd ../passiveTransGDHFoam
 	wclean
 cd ../passiveTransLaminarFoam
 	wclean
+cd ../expEulerGDHFoam
+	wclean
+cd ../expEulerFoam
+	wclean
+cd ../RK4ScalarFoam
+	wclean
+cd ../RK4GDHFoam
+	wclean

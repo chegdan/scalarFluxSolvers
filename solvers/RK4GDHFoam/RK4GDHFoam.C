@@ -26,7 +26,7 @@ Application
     scalarTransportFoam
 
 Description
-    Solves a transport equation for a passive scalar
+    Explicitly solves a transient transport equation for a passive scalar in a turbulent flow
 
 \*---------------------------------------------------------------------------*/
 
@@ -42,73 +42,58 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 #   include "createFields.H"
-/*#   include "readTimeControls.H"//added
+#   include "readTimeControls.H"//added
 #   include "CourantNo.H"//added
-
-//Info<<"Setting initial delta time"<<endl;
 #   include "setInitialDeltaT.H"//added--only need to set timestep once
 #   include "showCoNum.H"//output the Courant number after timestep change
-*/
-#   include "readSIMPLEControls.H"//added--reads in tSchmidt to see if turbulent schmidt relation should be used
 
-//treat relationship to R as a turbulent diffusivity
+    Dt = nut/Sct;
 
-    volSymmTensorField Dt = ((k/(Sct*epsilon)))*R;
-
-//correct negative values in Dt to positive
-/*forAll(Dt, cellI){
-
-	Dt[cellI].xx() = ( Dt[cellI].xx() < 0 ) ? -Dt[cellI].xx() : Dt[cellI].xx() ;
-	Dt[cellI].xy() = ( Dt[cellI].xy() < 0 ) ? -Dt[cellI].xy() : Dt[cellI].xy() ;
-	Dt[cellI].xz() = ( Dt[cellI].xz() < 0 ) ? -Dt[cellI].xz() : Dt[cellI].xz() ;
-	Dt[cellI].yy() = ( Dt[cellI].yy() < 0 ) ? -Dt[cellI].yy() : Dt[cellI].yy() ;
-	Dt[cellI].yz() = ( Dt[cellI].yz() < 0 ) ? -Dt[cellI].yz() : Dt[cellI].yz() ;
-	Dt[cellI].zz() = ( Dt[cellI].zz() < 0 ) ? -Dt[cellI].zz() : Dt[cellI].zz() ;
-
-}
-*/
-
-    //volVectorField gradC = fvc::grad(C);
-
-    //Dt.write();//must write the Dturbulent field if changed by ScNo.H
+    Dt.write();//must write the Dturbulent field if changed by ScNo.H
     phi.write();//write the phi field in initial directory
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    Info<< "\nCalculating scalar transport\n" << endl;
+    Info<< "\nCalculating implicit turbulent scalar transport\n" << endl;
+
+	//Runge-Kutta Constant Declaration and initialization
+	volScalarField k1 = C;
+	volScalarField k2 = C;
+	volScalarField k3 = C;
+	volScalarField k4 = C;
+
+	volScalarField C2 = C;
+	volScalarField C3 = C;
+	volScalarField C4 = C;
 
     for (runTime++; !runTime.end(); runTime++)
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-#       include "readSIMPLEControls.H"
-#       include "initConvergenceCheck.H"
 
-        for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
-        {
-
-	fvScalarMatrix CEqn
-	(
-           fvm::div(phi, C)
-	 + fvm::SuSp(-fvc::div(phi), C)//added for boundedness from post (http://www.cfd-online.com/Forums/openfoam/64602-origin-fvm-sp-fvc-div-phi_-epsilon_-kepsilon-eqn.html)
-	 - fvm::laplacian(D, C)
-         - fvc::laplacian(Dt, C)//treat Reynolds stress portion as explicit
-	);
-
-	CEqn.relax();
+	k1 == runTime.deltaT()*( fvc::laplacian(D, C) + fvc::laplacian(Dt, C) - fvc::div(phi, C) + fvc::div(phi)*C);
 	
-	eqnResidual = solve(CEqn).initialResidual();
-        maxResidual = max(eqnResidual, maxResidual);
+	C2 == C + 0.5 * k1;
 
-        }
+	k2 == runTime.deltaT()*( fvc::laplacian(D, C2) + fvc::laplacian(Dt, C2) - fvc::div(phi, C2) + fvc::div(phi)*C2);
+
+	C3 == C + 0.5 * k2;
+
+	k3 == runTime.deltaT()*( fvc::laplacian(D, C3) + fvc::laplacian(Dt, C3) - fvc::div(phi, C3) + fvc::div(phi)*C3);
+
+	C4 == C + k3;
+
+	k4 == runTime.deltaT()*( fvc::laplacian(D, C4) + fvc::laplacian(Dt, C4) - fvc::div(phi, C4) + fvc::div(phi)*C4);
+
+	C == C + (1.0/6.0)*(k1 + 2*k2 + 2*k3 + k4);
+
+
 
         runTime.write();
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
-
-#       include "convergenceCheck.H"
 
     }
 

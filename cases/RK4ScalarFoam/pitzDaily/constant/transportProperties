@@ -10,46 +10,12 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      transportProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application scalarTransportFoam;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1;
-
-deltaT          0.01;
-
-writeControl    adjustableRunTime;
-
-writeInterval   0.01;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression uncompressed;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-adjustTimeStep  yes;
-
-maxCo           0.5;
-
-maxDeltaT       1;
-
-
+nu           nu [0 2 -1 0 0 0 0] 0.01;
+D            D 	[0 2 -1 0 0 0 0] 1.9e-5;
+Sct         Sct [0 0 0 0 0 0 0] 0.7;
 
 // ************************************************************************* //

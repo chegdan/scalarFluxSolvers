@@ -1,0 +1,183 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+Build  : 1.6-ext-f3027b3161e4
+Exec   : RKF45GDHFoam
+Date   : Mar 05 2012
+Time   : 17:48:03
+Host   : aris
+PID    : 6410
+Case   : /home/dcombest/OpenFOAM/dcombest-1.6-ext/applications/scalarFluxSolvers/cases/RKF45GDHFoam/pitzDaily
+nProcs : 1
+SigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Create mesh for time = 0
+
+// using new solver syntax:
+T
+{
+    solver          PBiCG;
+    preconditioner  DILU;
+    tolerance       1e-06;
+    relTol          0;
+}
+
+// using new solver syntax:
+C
+{
+    solver          PBiCG;
+    preconditioner  DILU;
+    tolerance       1e-06;
+    relTol          0;
+}
+
+Reading transportProperties
+
+Reading tubulentSchmidt number
+
+Reading molecular mass diffusivity 
+
+Reading field C
+
+Reading field Dturbulent
+
+Reading field nut
+
+Reading field U
+
+Reading/calculating face flux field phi
+
+Courant Number mean: 22.6028 max: 190.598 velocity magnitude: 10.1683
+Courant Number mean: 0.0591696 max: 0.498948 velocity magnitude: 10.1683 timestep size 2.6178e-05 [sec] 
+
+Calculating implicit turbulent scalar transport
+
+Time = 2.6178e-05
+
+ExecutionTime = 0.28 s  ClockTime = 1 s
+ Step size = 9.39943e-05 s
+
+Time = 5.2356e-05
+
+ExecutionTime = 0.32 s  ClockTime = 1 s
+ Step size = 0.00024753 s
+
+Time = 7.8534e-05
+
+ExecutionTime = 0.37 s  ClockTime = 1 s
+ Step size = 0.000301018 s
+
+Time = 0.000104712
+
+ExecutionTime = 0.41 s  ClockTime = 1 s
+ Step size = 0.000176349 s
+
+Time = 0.00013089
+
+ExecutionTime = 0.46 s  ClockTime = 1 s
+ Step size = 2.70857e-05 s
+
+Time = 0.000157068
+
+ExecutionTime = 0.51 s  ClockTime = 1 s
+ Step size = 8.61081e-06 s
+
+Time = 0.000183246
+
+ExecutionTime = 0.55 s  ClockTime = 1 s
+ Step size = 5.09683e-06 s
+
+Time = 0.000209424
+
+ExecutionTime = 0.6 s  ClockTime = 1 s
+ Step size = 3.81818e-06 s
+
+Time = 0.000235602
+
+ExecutionTime = 0.65 s  ClockTime = 1 s
+ Step size = 3.2742e-06 s
+
+Time = 0.00026178
+
+ExecutionTime = 0.7 s  ClockTime = 1 s
+ Step size = 3.03962e-06 s
+
+Time = 0.000287958
+
+ExecutionTime = 0.76 s  ClockTime = 1 s
+ Step size = 2.97887e-06 s
+
+Time = 0.000314136
+
+ExecutionTime = 0.81 s  ClockTime = 1 s
+ Step size = 3.03369e-06 s
+
+Time = 0.000340314
+
+ExecutionTime = 0.88 s  ClockTime = 1 s
+ Step size = 3.17908e-06 s
+
+Time = 0.000366492
+
+ExecutionTime = 0.95 s  ClockTime = 1 s
+ Step size = 3.40734e-06 s
+
+Time = 0.00039267
+
+ExecutionTime = 1.07 s  ClockTime = 1 s
+ Step size = 3.72256e-06 s
+
+Time = 0.000418848
+
+ExecutionTime = 1.25 s  ClockTime = 2 s
+ Step size = 4.1397e-06 s
+
+Time = 0.000445026
+
+ExecutionTime = 1.56 s  ClockTime = 2 s
+ Step size = 4.68722e-06 s
+
+Time = 0.000471204
+
+ExecutionTime = 2.16 s  ClockTime = 2 s
+ Step size = 5.41397e-06 s
+
+Time = 0.000497382
+
+ExecutionTime = 3.3 s  ClockTime = 4 s
+ Step size = 6.40429e-06 s
+
+Time = 0.00052356
+
+ExecutionTime = 5.73 s  ClockTime = 6 s
+ Step size = 7.66127e-06 s
+
+Time = 0.000549738
+
+ExecutionTime = 11.33 s  ClockTime = 12 s
+ Step size = 9.33821e-06 s
+
+Time = 0.000575916
+
+ExecutionTime = 22.55 s  ClockTime = 23 s
+ Step size = 1.17345e-05 s
+
+Time = 0.000602094
+
+ExecutionTime = 44.94 s  ClockTime = 45 s
+ Step size = 1.54831e-05 s
+
+Time = 0.000628272
+
+ExecutionTime = 89.47 s  ClockTime = 90 s
+ Step size = 2.20166e-05 s
+
+Time = 0.00065445
+
